@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{% if cake %}Edit Cake{% else %}Add New Cake{% endif %}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_name">Name:</label>
+            <input type="text" id="id_name" name="name" class="form-control" value="{{ cake.name|default:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="id_description">Description:</label>
+            <textarea id="id_description" name="description" class="form-control" rows="3">{{ cake.description|default:'' }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="id_price">Price:</label>
+            <input type="number" id="id_price" name="price" class="form-control" value="{{ cake.price|default:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="id_image">Image:</label>
+            <input type="file" id="id_image" name="image" class="form-control-file">
+            {% if cake.image %}
+                <p>Current image: <img src="{{ cake.image.url }}" alt="{{ cake.name }}" width="100"></p>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">{% if cake %}Update Cake{% else %}Add Cake{% endif %}</button>
+    </form>
+</div>
+{% endblock %}

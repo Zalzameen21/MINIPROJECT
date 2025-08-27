@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart - CakeDelight</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    body {
+      background: #fff8f0;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      background-color: #ff69b4;
+      color: white;
+      padding: 15px 30px;
+      text-align: center;
+      font-size: 28px;
+    }
+    .cart-container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+    }
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+    .cart-item h4 {
+      margin: 0;
+      color: #ff69b4;
+    }
+    .cart-total {
+      text-align: right;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .purchase-button {
+      display: block;
+      width: 100%;
+      margin-top: 30px;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .purchase-button:hover {
+      background-color: #ff85c1;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">Your Cart</div>
+
+  <div class="cart-container">
+    {% if cart_items %}
+      {% for item in cart_items %}
+        <div class="cart-item">
+          <div>
+            <h4>{{ item.cake.name }}</h4>
+            <p>Quantity: 1</p>
+            <p>Price: ₹{{ item.cake.price }}</p>
+          </div>
+          <a href="{% url 'remove_from_cart' item.cake.id %}">
+            <button>Remove</button>
+          </a>
+        </div>
+      {% endfor %}
+
+      <div class="cart-total">
+        Total: ₹{{ total }}
+      </div>
+
+      <button class="purchase-button">Proceed to Purchase</button>
+    {% else %}
+      <p>Your cart is empty 🍰</p>
+    {% endif %}
+  </div>
+</body>
+</html>

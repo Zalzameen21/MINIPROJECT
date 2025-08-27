@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cakesmart Login / Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e6ccff, #d5b3ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 360px;
+            text-align: center;
+        }
+        .servesmart-title {
+            font-size: 38px;
+            font-weight: 700;
+            color: #5a5a5a;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 1.5px;
+        }
+        .servesmart-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #b27cf0, #8e44ad);
+            margin: 8px auto 0;
+            border-radius: 2px;
+        }
+        h2 { margin-top: 0; margin-bottom: 20px; color: #333; font-size: 28px; font-weight: 600; }
+        .messages { margin-bottom: 20px; }
+        .messages .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 6px; font-size: 14px; margin-bottom: 10px; }
+        .messages .error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 6px; font-size: 14px; margin-bottom: 10px; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; color: #555; font-weight: 500; font-size: 15px; }
+        .form-group input[type="text"], .form-group input[type="password"], .form-group input[type="email"], .form-group input[type="tel"], .form-group select {
+            width: 100%; padding: 12px; border: 1px solid #c2c2c2; border-radius: 6px; font-size: 16px; outline: none;
+        }
+        .form-group input[type="submit"] {
+            width: 100%; padding: 14px; background: linear-gradient(45deg, #b27cf0, #8e44ad);
+            color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        .form-group input[type="submit"]:hover {
+            background: linear-gradient(45deg, #8e44ad, #b27cf0);
+            transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+        }
+        .toggle-link { margin-top: 15px; display: block; text-align: center; color: #8e44ad; cursor: pointer; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="Cakesmart-title">Cakesmart</div>
+        <h2 id="form-title">Login</h2>
+
+        <div class="messages">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+        </div>
+
+        <form id="login-form" method="POST" action="{% url 'admin_login' %}">
+            {% csrf_token %}
+            <div class="form-group" id="role-group">
+                <label for="role">Login As</label>
+                <select id="role" name="role" required>
+                    <option value="">-- Select Role --</option>
+                    <option value="admin">Admin</option>
+                    <option value="User">USER</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="name-group" style="display:none;">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter Full Name">
+            </div>
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter Username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter Password" required>
+            </div>
+
+            <div class="form-group" id="email-group" style="display:none;">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter Email">
+            </div>
+
+            <div class="form-group" id="phone-group" style="display:none;">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter Phone Number">
+            </div>
+
+            <div class="form-group" id="address-group" style="display:none;">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" placeholder="Enter Address">
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Login" id="submit-btn">
+            </div>
+        </form>
+
+        <span class="toggle-link" id="toggle-form">Don't have an account? Register</span>
+    </div>
+
+    <script>
+        const toggleLink = document.getElementById('toggle-form');
+        const formTitle = document.getElementById('form-title');
+        const emailGroup = document.getElementById('email-group');
+        const phoneGroup = document.getElementById('phone-group');
+        const submitBtn = document.getElementById('submit-btn');
+        const roleGroup = document.getElementById('role-group');
+
+        let isLogin = true;
+
+        toggleLink.addEventListener('click', () => {
+            isLogin = !isLogin;
+            if(isLogin) {
+                formTitle.textContent = 'Login';
+                submitBtn.value = 'Login';
+                emailGroup.style.display = 'none';
+                phoneGroup.style.display = 'none';
+                roleGroup.style.display = 'block';
+                toggleLink.textContent = "Don't have an account? Register";
+                document.getElementById('login-form').action = "{% url 'admin_login' %}";
+            } else {
+                formTitle.textContent = 'Register';
+                submitBtn.value = 'Register';
+                emailGroup.style.display = 'block';
+                phoneGroup.style.display = 'block';
+                roleGroup.style.display = 'none';
+                toggleLink.textContent = 'Already have an account? Login';
+                document.getElementById('login-form').action = "{% url 'register' %}";
+            }
+        });
+    </script>
+</body>
+</html>

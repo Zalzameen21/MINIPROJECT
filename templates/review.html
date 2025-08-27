@@ -1,0 +1,20 @@
+<h2>Submit Your Review</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Review</button>
+</form>
+
+<hr>
+
+<h2>Customer Reviews</h2>
+{% for r in reviews %}
+<div class="review">
+    <p><strong>{{ r.user.username }}</strong> reviewed <strong>{{ r.cake.name }}</strong></p>
+    <p>{{ r.comment }}</p>
+    <p>⭐ Rating: {{ r.rating }}/5</p>
+    <p><small>{{ r.created_at }}</small></p>
+</div>
+{% empty %}
+<p>No reviews yet.</p>
+{% endfor %}

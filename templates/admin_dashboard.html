@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .cake-list {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        button, .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 5px; /* Added for spacing */
+        }
+        
+        .btn-edit {
+            background-color: #28a745;
+        }
+
+        .btn-danger {
+            background-color: red;
+        }
+
+        .cake-item {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cake-details {
+            display: flex;
+            align-items: center;
+        }
+
+        .cake-item img {
+            height: 60px;
+            margin-right: 10px;
+            vertical-align: middle;
+            border-radius: 8px;
+        }
+
+        .top-buttons {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+
+    <div class="top-buttons">
+        <a href="{% url 'index' %}" class="btn" target="_blank">View Gallery</a>
+        <a href="{% url 'add_cake' %}" class="btn">Add New Cake</a>
+        <a href="{% url 'logout' %}" class="btn">Logout</a>
+    </div>
+
+    <div class="cake-list">
+        <h2>All Cakes</h2>
+        {% for cake in cakes %}
+        <div class="cake-item">
+            <div class="cake-details">
+                <img src="{{ cake.image.url }}" alt="{{ cake.name }}">
+                <strong>{{ cake.name }}</strong> - ₹{{ cake.price }}
+            </div>
+            <div>
+                <a href="{% url 'edit_cake' cake.id %}" class="btn btn-edit">Edit</a>
+                <form method="POST" action="{% url 'delete_cake' cake.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <p>No cakes added yet.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
