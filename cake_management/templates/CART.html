@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart - CakeDelight</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    body { background: #fff8f0; font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    .header { background-color: #ff69b4; color: white; padding: 15px 30px; text-align: center; font-size: 28px; }
+    .cart-container { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 15px 0; }
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item h4 { margin: 0; color: #ff69b4; }
+    .quantity-controls { display: flex; align-items: center; gap: 10px; }
+    .quantity-btn { background-color: #ff69b4; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    .quantity-btn:hover { background-color: #ff85c1; }
+    .cart-total { text-align: right; font-size: 18px; font-weight: bold; margin-top: 20px; }
+
+    /* Back & Purchase buttons */
+    .purchase-button, .back-button {
+      display: block;
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    .purchase-button {
+      background-color: #ff69b4;
+      color: white;
+    }
+    .purchase-button:hover { background-color: #ff85c1; }
+    .back-button {
+      background-color: #6c757d;
+      color: white;
+    }
+    .back-button:hover { background-color: #5a6268; }
+  </style>
+</head>
+<body>
+  <div class="header">Your Cart</div>
+
+  <div class="cart-container">
+    {% if cart_items %}
+      {% for item in cart_items %}
+        <div class="cart-item">
+          <div>
+            <h4>{{ item.cake.name }}</h4>
+            <p>Price: ₹{{ item.cake.price }}</p>
+          </div>
+          <div class="quantity-controls">
+            <a href="{% url 'decrease_quantity' item.cake.id %}">
+              <button class="quantity-btn">-</button>
+            </a>
+            <span>{{ item.quantity }}</span>
+            <a href="{% url 'add_to_cart' item.cake.id %}">
+              <button class="quantity-btn">+</button>
+            </a>
+            <a href="{% url 'remove_from_cart' item.cake.id %}">
+              <button class="quantity-btn" style="background:#dc3545;">Remove</button>
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+
+      <div class="cart-total">
+        Total: ₹{{ total_price }}
+      </div>
+
+      <!-- Back button (to user home) -->
+      <a href="{% url 'user_home' %}" class="back-button">⬅ Back to Cakes</a>
+
+      <!-- Proceed to Purchase button -->
+      <a href="{% url 'proceed_to_purchase' %}" class="purchase-button">Proceed to Purchase</a>
+    {% else %}
+      <p>Your cart is empty 🍰</p>
+    {% endif %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ cake.name }} - CakeDelight</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    body {
+      background: #fff8f0;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      background-color: #ff69b4;
+      color: white;
+      padding: 15px 30px;
+      text-align: center;
+      font-size: 28px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .cake-image {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .cake-title {
+      font-size: 32px;
+      color: #ff69b4;
+      margin-top: 20px;
+    }
+    .cake-price {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .cake-info {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 10px 5px 20px 0;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+    }
+    .btn-cart { background-color: #ff69b4; }
+    .btn-cart:hover { background-color: #ff85c1; }
+    .btn-back { background-color: #555; }
+    .btn-back:hover { background-color: #777; }
+    .btn-customize { background-color: #ff9500; }
+    .btn-customize:hover { background-color: #ffb347; }
+    .btn-review { background-color: #4CAF50; }
+    .btn-review:hover { background-color: #45a049; }
+
+    /* Reviews */
+    .reviews {
+      margin-top: 40px;
+    }
+    .reviews h2 {
+      color: #ff69b4;
+      margin-bottom: 15px;
+    }
+    .review {
+      border-top: 1px solid #eee;
+      padding: 12px 0;
+    }
+    .review strong {
+      color: #ff69b4;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">Cake Details</div>
+
+  <div class="container">
+    <img src="{{ cake.image.url }}" alt="{{ cake.name }}" class="cake-image">
+
+    <h1 class="cake-title">{{ cake.name }}</h1>
+    <p class="cake-price">₹{{ cake.price }}</p>
+    <p class="cake-info"><strong>Size:</strong> {{ cake.size }}</p>
+    <p class="cake-info"><strong>Shape:</strong> {{ cake.shape }}</p>
+    <p class="cake-info">{{ cake.description }}</p>
+
+    <!-- Action Buttons -->
+    <a href="{% url 'add_to_cart' cake.id %}" class="btn btn-cart">Add to Cart</a>
+    <a href="{% url 'custom_cake_request' %}?cake_id={{ cake.id }}" class="btn btn-customize">Customize</a>
+    <a href="{% url 'user_home' %}" class="btn btn-back">Back to Cakes</a>
+
+    <!-- Reviews -->
+    <div class="reviews">
+      <h2>Customer Reviews</h2>
+      {% if reviews %}
+        {% for review in reviews %}
+          <div class="review">
+            <p><strong>{{ review.user.username }}</strong> says:</p>
+            <p>
+              {% for i in "12345" %}
+                {% if forloop.counter <= review.rating %}
+                  ★
+                {% else %}
+                  ☆
+                {% endif %}
+              {% endfor %}
+            </p>
+            <p>{{ review.comment }}</p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No reviews yet. Be the first to review!</p>
+      {% endif %}
+    </div>
+
+    <!-- Submit Review Button -->
+    {% if user.is_authenticated %}
+      <a href="{% url 'submit_review' cake.id %}" class="btn btn-review">Submit Your Review</a>
+    {% else %}
+      <p><a href="{% url 'login' %}">Login</a> to leave a review.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
